@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Impostor - Firebase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .screen { display: none; }
+        .active { display: block; }
+        .player-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .player-card .remove-btn {
+            cursor: pointer;
+            color: #dc3545;
+            font-weight: bold;
+            padding: 2px 8px;
+            border: 1px solid #dc3545;
+            border-radius: 3px;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .player-card .remove-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+        #gameCode {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div id="homeScreen" class="screen active">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body text-center p-5">
+                            <h1 class="mb-4">Juego del Impostor (Online)</h1>
+                            <button id="createGameBtn" class="btn btn-primary btn-lg w-100 mb-3">Crear Sala</button>
+                            <button id="joinGameBtn" class="btn btn-outline-primary btn-lg w-100">Unirse a Sala</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="createScreen" class="screen">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <h2 class="mb-4">Crear Sala</h2>
+                            <div class="mb-3">
+                                <label for="playerName" class="form-label">Tu nombre</label>
+                                <input type="text" class="form-control" id="playerName" placeholder="Ej: William">
+                            </div>
+                            <div class="mb-3">
+                                <label for="wordsList" class="form-label">Lista de palabras (separadas por comas)</label>
+                                <textarea class="form-control" id="wordsList" rows="3" placeholder="Ej: Astronauta, Cohete, Planeta, Luna"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="impostorCount" class="form-label">Cantidad de impostores</label>
+                                <input type="number" class="form-control" id="impostorCount" min="1" value="1">
+                            </div>
+                            <button id="createRoomBtn" class="btn btn-primary w-100 mb-3">Crear Sala</button>
+                            <button id="backFromCreateBtn" class="btn btn-outline-secondary w-100">Volver</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="joinScreen" class="screen">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <h2 class="mb-4">Unirse a Sala</h2>
+                            <div class="mb-3">
+                                <label for="joinPlayerName" class="form-label">Tu nombre</label>
+                                <input type="text" class="form-control" id="joinPlayerName" placeholder="Ej: María">
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomCode" class="form-label">Código de sala</label>
+                                <input type="text" class="form-control" id="roomCode" placeholder="Ej: ABC123">
+                            </div>
+                            <button id="joinRoomBtn" class="btn btn-primary w-100 mb-3">Unirse</button>
+                            <button id="backFromJoinBtn" class="btn btn-outline-secondary w-100">Volver</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lobbyScreen" class="screen">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h2>Sala de Espera</h2>
+                                <div>
+                                    <span class="badge bg-primary">Código: <span id="gameCode"></span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Jugadores conectados:</h5>
+                                <div id="playersList" class="mt-3">
+                                    <p class="text-muted">Esperando jugadores...</p>
+                                </div>
+                            </div>
+                            
+                            <div id="creatorControls" class="d-none">
+                                <p class="alert alert-info">Solo tú, el creador, puedes iniciar el juego.</p>
+                                <button id="startGameBtn" class="btn btn-success w-100">Iniciar Juego</button>
+                            </div>
+                            
+                            <button id="leaveLobbyBtn" class="btn btn-outline-secondary w-100 mt-3">Salir de la Sala</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="screen">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body p-4 text-center">
+                            <h2 class="mb-4">Tu Rol</h2>
+                            <div id="roleInfo" class="mb-4">
+                                </div>
+                            <div id="endRoundControls" class="d-none mb-3">
+                                <button id="endRoundBtn" class="btn btn-warning w-100">Terminar Ronda</button>
+                            </div>
+                            <button id="backToLobbyBtn" class="btn btn-outline-secondary w-100">Volver a la Sala</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // ----------------------------------------------------
+        // 1. CONFIGURACIÓN DE FIREBASE: ¡ACTUALIZA ESTO!
+        // ----------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg5yaU5NepkWcLHjQkECrOUcUm85_Kus8",
+            authDomain: "juego-el-impostor.firebaseapp.com",
+            databaseURL: "https://juego-el-impostor-default-rtdb.firebaseio.com",
+            projectId: "juego-el-impostor",
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = app.database();
+        const roomsRef = database.ref('rooms'); 
+
+        // ----------------------------------------------------
+        // 2. VARIABLES Y UTILIDADES
+        // ----------------------------------------------------
+        let currentPlayer = null;
+        let currentRoomCode = null;
+        let isCreator = false;
+
+        const screens = {
+            home: document.getElementById('homeScreen'),
+            create: document.getElementById('createScreen'),
+            join: document.getElementById('joinScreen'),
+            lobby: document.getElementById('lobbyScreen'),
+            game: document.getElementById('gameScreen')
+        };
+        
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.remove('active'));
+            screens[screenName].classList.add('active');
+        }
+
+        function generateRoomCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        // ----------------------------------------------------
+        // 3. LÓGICA MULTIJUGADOR (USANDO FIREBASE)
+        // ----------------------------------------------------
+
+        function assignRoles(players, words, impostorCount) {
+            const playerIds = Object.keys(players);
+            if (playerIds.length < impostorCount) {
+                return { players, currentWord: null };
+            }
+
+            const shuffledPlayers = [...playerIds].sort(() => Math.random() - 0.5);
+            const selectedWord = words[Math.floor(Math.random() * words.length)];
+
+            // Asignar roles
+            for (let i = 0; i < shuffledPlayers.length; i++) {
+                const playerId = shuffledPlayers[i];
+                if (i < impostorCount) {
+                    players[playerId].role = 'impostor';
+                    players[playerId].word = null;
+                } else {
+                    players[playerId].role = 'inocente';
+                    players[playerId].word = selectedWord;
+                }
+            }
+            return { players, currentWord: selectedWord };
+        }
+
+        function updateLobbyUI(roomData) {
+            document.getElementById('gameCode').textContent = currentRoomCode;
+            const playersListElement = document.getElementById('playersList');
+            playersListElement.innerHTML = '';
+
+            if (roomData && roomData.players) {
+                // Verificar si el jugador actual todavía está en la sala
+                if (!roomData.players[currentPlayer.id]) {
+                    // El jugador fue eliminado de la sala
+                    alert("Has sido eliminado de la sala por el creador.");
+                    const tempRoomCode = currentRoomCode;
+                    currentRoomCode = null;
+                    currentPlayer = null;
+                    isCreator = false;
+                    roomsRef.child(tempRoomCode).off(); // Desactiva la escucha
+                    showScreen('home');
+                    return;
+                }
+
+                // Listar jugadores
+                Object.values(roomData.players).forEach(player => {
+                    const playerCard = document.createElement('div');
+                    playerCard.className = 'player-card';
+
+                    const playerName = document.createElement('span');
+                    playerName.textContent = player.name + (player.id === currentPlayer.id ? ' (Tú)' : '');
+                    playerCard.appendChild(playerName);
+
+                    // Mostrar botón de eliminar solo si eres el creador y no es tu propio jugador
+                    if (isCreator && player.id !== currentPlayer.id) {
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.textContent = '✕';
+                        removeBtn.onclick = () => removePlayer(player.id);
+                        playerCard.appendChild(removeBtn);
+                    }
+
+                    playersListElement.appendChild(playerCard);
+                });
+
+                // Mostrar controles solo si eres el creador
+                document.getElementById('creatorControls').classList.toggle('d-none', !isCreator);
+
+                // Mostrar información de palabras restantes si eres el creador
+                if (isCreator && roomData.words) {
+                    const wordsInfo = document.createElement('p');
+                    wordsInfo.className = 'alert alert-info mt-3';
+                    wordsInfo.textContent = `Palabras restantes: ${roomData.words.length}`;
+                    if (roomData.words.length === 0) {
+                        wordsInfo.className = 'alert alert-warning mt-3';
+                        wordsInfo.textContent = 'No quedan palabras. No se pueden iniciar más rondas.';
+                    }
+                    playersListElement.appendChild(wordsInfo);
+                }
+
+                // Si el juego ya empezó, ir a la pantalla de juego
+                if (roomData.status === 'playing') {
+                    // Actualizamos el rol local del jugador antes de mostrar la pantalla
+                    currentPlayer.role = roomData.players[currentPlayer.id].role;
+                    currentPlayer.word = roomData.players[currentPlayer.id].word;
+
+                    // Mostrar botón de terminar ronda solo para el creador
+                    document.getElementById('endRoundControls').classList.toggle('d-none', !isCreator);
+
+                    showRoleInfo();
+                    showScreen('game');
+                } else {
+                     showScreen('lobby');
+                }
+
+            } else {
+                // La sala ya no existe o fue eliminada (te desconectaron)
+                alert("La sala ha sido cerrada o has sido desconectado.");
+                const tempRoomCode = currentRoomCode;
+                currentRoomCode = null;
+                currentPlayer = null;
+                isCreator = false;
+                roomsRef.child(tempRoomCode).off(); // Desactiva la escucha
+                showScreen('home');
+            }
+        }
+
+        function showRoleInfo() {
+            const roleInfo = document.getElementById('roleInfo');
+            let html = '';
+            
+            if (!currentPlayer || !currentPlayer.role) {
+                html = `<div class="alert alert-warning">Esperando asignación de rol...</div>`;
+            } else if (currentPlayer.role === 'impostor') {
+                // Si eres el impostor, no conoces la palabra secreta.
+                html = `
+                    <div class="alert alert-danger">
+                        <h3>¡Eres el IMPOSTOR! 😈</h3>
+                        <p>Tu objetivo es engañar a los demás sin que te descubran.</p>
+                        <p class="mt-3">Presta mucha atención a sus pistas para adivinar la palabra.</p>
+                    </div>
+                `;
+            } else {
+                // Si eres inocente, tienes tu palabra.
+                html = `
+                    <div class="alert alert-success">
+                        <h3>Eres INOCENTE ✅</h3>
+                        <p>Tu palabra es: <strong>${currentPlayer.word}</strong></p>
+                        <p>Da pistas sutiles para identificar al impostor.</p>
+                    </div>
+                `;
+            }
+            roleInfo.innerHTML = html;
+        }
+
+        // ----------------------------------------------------
+        // 4. FUNCIONES DE GESTIÓN DE JUGADORES
+        // ----------------------------------------------------
+
+        // Función para remover un jugador de la sala
+        async function removePlayer(playerId) {
+            if (!currentRoomCode || !isCreator) return;
+
+            const roomRef = roomsRef.child(currentRoomCode);
+            await roomRef.child('players').child(playerId).remove();
+        }
+
+        // Función para configurar detección de desconexión automática
+        function setupPresenceDetection() {
+            if (!currentRoomCode || !currentPlayer) return;
+
+            const roomRef = roomsRef.child(currentRoomCode);
+            const playerRef = roomRef.child('players').child(currentPlayer.id);
+
+            // Si eres el creador, cuando te desconectes elimina toda la sala
+            if (isCreator) {
+                roomRef.onDisconnect().remove();
+            } else {
+                // Si no eres creador, solo elimina tu entrada de jugador
+                playerRef.onDisconnect().remove();
+            }
+
+            // Marcar como conectado
+            playerRef.update({ connected: true });
+        }
+
+        // ----------------------------------------------------
+        // 5. EVENT LISTENERS
+        // ----------------------------------------------------
+
+        // Crea Sala
+        document.getElementById('createRoomBtn').addEventListener('click', async () => {
+            const playerName = document.getElementById('playerName').value.trim();
+            const wordsList = document.getElementById('wordsList').value.trim();
+            const impostorCount = parseInt(document.getElementById('impostorCount').value);
+            
+            if (!playerName || !wordsList || impostorCount < 1) {
+                alert('Por favor, completa todos los campos.');
+                return;
+            }
+
+            currentRoomCode = generateRoomCode();
+            const words = wordsList.split(',').map(word => word.trim()).filter(w => w.length > 0); // Limpia palabras vacías
+            const playerId = 'player_' + Date.now();
+            
+            currentPlayer = { id: playerId, name: playerName, role: null, word: null };
+            isCreator = true;
+
+            const newRoomData = {
+                creatorId: playerId,
+                words: words,
+                impostorCount: impostorCount,
+                status: 'waiting',
+                players: { [playerId]: { name: playerName, id: playerId } }
+            };
+
+            try {
+                // Escribir la nueva sala en Firebase
+                await roomsRef.child(currentRoomCode).set(newRoomData);
+
+                // Configurar detección de desconexión
+                setupPresenceDetection();
+
+                // Suscribirse a los cambios de la sala (tiempo real)
+                roomsRef.child(currentRoomCode).on('value', snapshot => {
+                    const roomData = snapshot.val();
+                    updateLobbyUI(roomData);
+                });
+
+            } catch (error) {
+                console.error("Error creando sala:", error);
+                alert("Error al crear la sala: " + error.message);
+                currentRoomCode = null;
+            }
+        });
+
+        // Unirse a Sala
+        document.getElementById('joinRoomBtn').addEventListener('click', async () => {
+            const playerName = document.getElementById('joinPlayerName').value.trim();
+            const roomCode = document.getElementById('roomCode').value.trim().toUpperCase();
+            
+            if (!playerName || !roomCode) {
+                alert('Por favor, ingresa tu nombre y el código de sala.');
+                return;
+            }
+
+            const roomRef = roomsRef.child(roomCode);
+            
+            try {
+                const snapshot = await roomRef.once('value');
+                const roomData = snapshot.val();
+
+                if (!roomData || roomData.status !== 'waiting') {
+                    alert('Sala no encontrada o el juego ya ha comenzado.');
+                    return;
+                }
+
+                const playerId = 'player_' + Date.now();
+                currentPlayer = { id: playerId, name: playerName, role: null, word: null };
+                currentRoomCode = roomCode;
+                isCreator = false;
+                
+                // Agregar el nuevo jugador a la lista
+                await roomRef.child('players').child(playerId).set({ name: playerName, id: playerId });
+
+                // Configurar detección de desconexión
+                setupPresenceDetection();
+
+                // Suscribirse a los cambios de la sala
+                roomRef.on('value', snapshot => {
+                    const roomData = snapshot.val();
+                    updateLobbyUI(roomData);
+                });
+
+            } catch (error) {
+                console.error("Error al unirse a la sala:", error);
+                alert("Error al unirse a la sala: " + error.message);
+            }
+        });
+
+        // Iniciar Juego (Solo creador)
+        document.getElementById('startGameBtn').addEventListener('click', async () => {
+            if (!currentRoomCode || !isCreator) return;
+
+            const roomRef = roomsRef.child(currentRoomCode);
+            const snapshot = await roomRef.once('value');
+            let room = snapshot.val();
+
+            if (!room || Object.keys(room.players).length < 2) {
+                 alert("Necesitas al menos 2 jugadores para empezar.");
+                 return;
+            }
+
+            if (!room.words || room.words.length === 0) {
+                alert("No quedan más palabras disponibles. Agrega nuevas palabras para continuar.");
+                return;
+            }
+
+            // 1. Asignar roles localmente
+            const { players, currentWord } = assignRoles(room.players, room.words, room.impostorCount);
+            room.players = players;
+
+            // 2. Actualizar el estado y los roles en Firebase
+            room.status = 'playing';
+            await roomRef.update({
+                status: 'playing',
+                players: room.players,
+                currentWord: currentWord
+            });
+            // La función 'on' se encargará de llevar a todos a la pantalla 'game'
+        });
+
+        // Terminar Ronda (Solo creador)
+        document.getElementById('endRoundBtn').addEventListener('click', async () => {
+            if (!currentRoomCode || !isCreator) return;
+
+            const roomRef = roomsRef.child(currentRoomCode);
+            const snapshot = await roomRef.once('value');
+            let room = snapshot.val();
+
+            if (!room) return;
+
+            // Eliminar la palabra actual de la lista de palabras
+            const currentWord = room.currentWord;
+            if (currentWord && room.words) {
+                const wordIndex = room.words.indexOf(currentWord);
+                if (wordIndex > -1) {
+                    room.words.splice(wordIndex, 1);
+                }
+            }
+
+            // Limpiar roles de todos los jugadores
+            Object.keys(room.players).forEach(playerId => {
+                room.players[playerId].role = null;
+                room.players[playerId].word = null;
+            });
+
+            // Actualizar estado a 'waiting' y volver al lobby
+            await roomRef.update({
+                status: 'waiting',
+                players: room.players,
+                words: room.words,
+                currentWord: null
+            });
+
+            // La función 'on' llevará a todos de vuelta al lobby automáticamente
+        });
+
+        // Salir de la Sala
+        document.getElementById('leaveLobbyBtn').addEventListener('click', async () => {
+            if (!currentRoomCode || !currentPlayer) return;
+
+            const roomRef = roomsRef.child(currentRoomCode);
+            const tempRoomCode = currentRoomCode;
+
+            // Quitar la suscripción de tiempo real
+            roomRef.off();
+
+            // Si eres el creador, eliminar la sala completa (expulsa a todos)
+            if (isCreator) {
+                await roomRef.remove();
+            } else {
+                // Si no eres creador, solo quítate de la lista de jugadores
+                await roomRef.child('players').child(currentPlayer.id).remove();
+            }
+
+            currentRoomCode = null;
+            currentPlayer = null;
+            isCreator = false;
+            showScreen('home');
+        });
+
+
+        // Botones de navegación (Volver)
+        document.getElementById('createGameBtn').addEventListener('click', () => showScreen('create'));
+        document.getElementById('joinGameBtn').addEventListener('click', () => showScreen('join'));
+        document.getElementById('backFromCreateBtn').addEventListener('click', () => showScreen('home'));
+        document.getElementById('backFromJoinBtn').addEventListener('click', () => showScreen('home'));
+        document.getElementById('backToLobbyBtn').addEventListener('click', () => showScreen('lobby'));
+
+    </script>
+</body>
+</html>
