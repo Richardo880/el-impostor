@@ -2,9 +2,12 @@
 
 Juego multijugador online estilo "Among Us" simplificado donde un grupo de amigos pueden jugar juntos. Algunos jugadores reciben una palabra secreta y deben dar pistas, mientras que el impostor debe adivinar la palabra sin ser descubierto.
 
-## Demo
+## Demo en Vivo
 
-**GitHub Pages:** https://richardo880.github.io/el-impostor/
+| Plataforma | URL |
+|------------|-----|
+| Firebase Hosting | https://el-impostor-py.web.app |
+| GitHub Pages | https://richardo880.github.io/el-impostor/public/ |
 
 ## Screenshots
 
@@ -32,7 +35,7 @@ Juego multijugador online estilo "Among Us" simplificado donde un grupo de amigo
 - **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
 - **Backend:** Firebase Realtime Database
 - **Fuentes:** Bebas Neue + Space Grotesk (Google Fonts)
-- **Hosting:** GitHub Pages / Firebase Hosting
+- **Hosting:** Firebase Hosting / GitHub Pages
 
 ## Características
 
@@ -45,8 +48,8 @@ Juego multijugador online estilo "Among Us" simplificado donde un grupo de amigo
 - Avatares con iniciales del jugador
 
 ### Funcionalidades
-- Salas en tiempo real con código único
-- Asignación aleatoria de roles
+- Salas en tiempo real con código único de 6 caracteres
+- Asignación aleatoria de roles (inocente/impostor)
 - Sistema de rondas con palabras consumibles
 - Creador puede eliminar jugadores
 - Detección automática de desconexiones
@@ -57,23 +60,30 @@ Juego multijugador online estilo "Among Us" simplificado donde un grupo de amigo
 ```
 el-impostor/
 ├── public/
-│   ├── index.html      # Aplicación completa (HTML + CSS + JS)
-│   └── 404.html        # Página de error
-├── firebase.json       # Configuración Firebase (opcional)
-├── database.rules.json # Reglas de seguridad
+│   ├── index.html        # Aplicación completa (HTML + CSS + JS)
+│   └── 404.html          # Página de error
+├── firebase.json         # Configuración Firebase Hosting
+├── .firebaserc           # Proyecto Firebase vinculado
+├── database.rules.json   # Reglas de seguridad de la BD
 └── README.md
 ```
 
 ## Configuración de Firebase
 
-### Configuración actual en el código
+### Proyecto actual
+
+- **Project ID:** `el-impostor-py`
+- **Hosting:** https://el-impostor-py.web.app
+- **Database:** Firebase Realtime Database
+
+### Configuración en el código
 
 ```javascript
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "tu-proyecto.firebaseapp.com",
-    databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
-    projectId: "tu-proyecto",
+  apiKey: "...",
+  authDomain: "el-impostor-py.firebaseapp.com",
+  databaseURL: "https://el-impostor-py-default-rtdb.firebaseio.com",
+  projectId: "el-impostor-py",
 };
 ```
 
@@ -103,6 +113,53 @@ const firebaseConfig = {
 4. Copia el objeto `firebaseConfig`
 5. Reemplázalo en `public/index.html`
 
+## Seguridad
+
+### Sobre la API Key expuesta
+
+Las API keys de Firebase para aplicaciones web **son públicas por diseño**. La seguridad se implementa mediante:
+
+1. **Firebase Security Rules** - Controlan quién puede leer/escribir datos
+2. **Restricción de dominios** - Limita desde qué URLs puede usarse la key
+
+### Restringir la API Key (recomendado)
+
+1. Ve a [Google Cloud Console - Credentials](https://console.cloud.google.com/apis/credentials)
+2. Selecciona tu proyecto
+3. Clic en tu API key
+4. En "Application restrictions" → "HTTP referrers"
+5. Agrega tus dominios:
+   ```
+   https://tu-proyecto.web.app/*
+   https://tu-usuario.github.io/*
+   http://localhost:*
+   ```
+
+### Reglas de la Base de Datos
+
+Archivo `database.rules.json`:
+
+```json
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.hasChildren(['creatorId', 'status', 'players'])",
+        "players": {
+          "$playerId": {
+            ".validate": "newData.hasChildren(['id', 'name'])"
+          }
+        }
+      }
+    },
+    ".read": false,
+    ".write": false
+  }
+}
+```
+
 ## Desarrollo Local
 
 ### Opción 1: Abrir directamente
@@ -119,28 +176,40 @@ python -m http.server 5000
 
 ### Opción 3: Firebase CLI
 ```bash
-npm install -g firebase-tools
-firebase login
 firebase serve
 # Abrir http://localhost:5000
 ```
 
 ## Despliegue
 
+### Firebase Hosting (recomendado)
+
+```bash
+# Instalar Firebase CLI (solo la primera vez)
+npm install -g firebase-tools
+
+# Login (solo la primera vez)
+firebase login
+
+# Desplegar todo (hosting + database rules)
+firebase deploy
+
+# Solo hosting
+firebase deploy --only hosting
+
+# Solo reglas de base de datos
+firebase deploy --only database
+```
+
 ### GitHub Pages
+
 ```bash
 git add .
 git commit -m "Actualización"
 git push origin main
 ```
-Configurar en Settings → Pages → Branch: main → Folder: /public
 
-### Firebase Hosting
-```bash
-firebase login
-firebase init hosting
-firebase deploy
-```
+Configurar en **Settings → Pages → Branch: main**
 
 ## Estructura de Datos Firebase
 
@@ -191,7 +260,7 @@ Modifica el link de Google Fonts en el `<head>`:
 <link href="https://fonts.googleapis.com/css2?family=TU_FUENTE&display=swap" rel="stylesheet">
 ```
 
-## Limitaciones
+## Limitaciones Actuales
 
 - Sin autenticación de usuarios
 - Sin persistencia de partidas
@@ -209,6 +278,22 @@ Modifica el link de Google Fonts en el `<head>`:
 - [ ] Modo espectador
 - [ ] Estadísticas de victorias
 
+## Comandos Útiles
+
+```bash
+# Ver estado del proyecto Firebase
+firebase projects:list
+
+# Ver configuración actual
+firebase use
+
+# Cambiar de proyecto
+firebase use otro-proyecto
+
+# Ver logs de hosting
+firebase hosting:channel:list
+```
+
 ## Créditos
 
 - Diseño original inspirado en Among Us
@@ -223,3 +308,5 @@ MIT License - Libre para uso personal y comercial.
 ---
 
 **Desarrollado para jugar con amigos**
+
+**Repositorio:** https://github.com/Richardo880/el-impostor
