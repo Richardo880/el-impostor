@@ -1,770 +1,858 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Impostor - Juego de Deducción Social</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-        /* ============================================
+      /* ============================================
            THEME VARIABLES
            ============================================ */
-        :root {
-            /* Dark Theme (Default) */
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a24;
-            --bg-card-hover: #222230;
-            --bg-input: #0d0d14;
+      :root {
+        /* Dark Theme (Default) */
+        --bg-primary: #0a0a0f;
+        --bg-secondary: #12121a;
+        --bg-card: #1a1a24;
+        --bg-card-hover: #222230;
+        --bg-input: #0d0d14;
 
-            --text-primary: #f0f0f5;
-            --text-secondary: #9090a0;
-            --text-muted: #606070;
+        --text-primary: #f0f0f5;
+        --text-secondary: #9090a0;
+        --text-muted: #606070;
 
-            --accent-primary: #7c3aed;
-            --accent-primary-glow: rgba(124, 58, 237, 0.4);
-            --accent-secondary: #06b6d4;
-            --accent-secondary-glow: rgba(6, 182, 212, 0.3);
+        --accent-primary: #7c3aed;
+        --accent-primary-glow: rgba(124, 58, 237, 0.4);
+        --accent-secondary: #06b6d4;
+        --accent-secondary-glow: rgba(6, 182, 212, 0.3);
 
-            --danger: #ef4444;
-            --danger-glow: rgba(239, 68, 68, 0.4);
-            --success: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.3);
-            --warning: #f59e0b;
+        --danger: #ef4444;
+        --danger-glow: rgba(239, 68, 68, 0.4);
+        --success: #10b981;
+        --success-glow: rgba(16, 185, 129, 0.3);
+        --warning: #f59e0b;
 
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(124, 58, 237, 0.3);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --border-glow: rgba(124, 58, 237, 0.3);
 
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
-            --shadow-glow: 0 0 40px var(--accent-primary-glow);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 40px var(--accent-primary-glow);
 
-            --noise-opacity: 0.03;
-        }
+        --noise-opacity: 0.03;
+      }
 
-        [data-theme="light"] {
-            --bg-primary: #f8f6f4;
-            --bg-secondary: #efebe8;
-            --bg-card: #ffffff;
-            --bg-card-hover: #faf8f6;
-            --bg-input: #f0ece8;
+      [data-theme="light"] {
+        --bg-primary: #f8f6f4;
+        --bg-secondary: #efebe8;
+        --bg-card: #ffffff;
+        --bg-card-hover: #faf8f6;
+        --bg-input: #f0ece8;
 
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a4a5a;
-            --text-muted: #8a8a9a;
+        --text-primary: #1a1a2e;
+        --text-secondary: #4a4a5a;
+        --text-muted: #8a8a9a;
 
-            --accent-primary: #6d28d9;
-            --accent-primary-glow: rgba(109, 40, 217, 0.2);
-            --accent-secondary: #0891b2;
-            --accent-secondary-glow: rgba(8, 145, 178, 0.15);
+        --accent-primary: #6d28d9;
+        --accent-primary-glow: rgba(109, 40, 217, 0.2);
+        --accent-secondary: #0891b2;
+        --accent-secondary-glow: rgba(8, 145, 178, 0.15);
 
-            --danger: #dc2626;
-            --danger-glow: rgba(220, 38, 38, 0.2);
-            --success: #059669;
-            --success-glow: rgba(5, 150, 105, 0.15);
-            --warning: #d97706;
+        --danger: #dc2626;
+        --danger-glow: rgba(220, 38, 38, 0.2);
+        --success: #059669;
+        --success-glow: rgba(5, 150, 105, 0.15);
+        --warning: #d97706;
 
-            --border-color: rgba(0, 0, 0, 0.08);
-            --border-glow: rgba(109, 40, 217, 0.2);
+        --border-color: rgba(0, 0, 0, 0.08);
+        --border-glow: rgba(109, 40, 217, 0.2);
 
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.12);
-            --shadow-glow: 0 0 40px var(--accent-primary-glow);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.12);
+        --shadow-glow: 0 0 40px var(--accent-primary-glow);
 
-            --noise-opacity: 0.02;
-        }
+        --noise-opacity: 0.02;
+      }
 
-        /* ============================================
+      /* ============================================
            BASE STYLES
            ============================================ */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        html {
-            scroll-behavior: smooth;
-        }
+      html {
+        scroll-behavior: smooth;
+      }
 
-        body {
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background 0.4s ease, color 0.4s ease;
-        }
+      body {
+        font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont,
+          sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition: background 0.4s ease, color 0.4s ease;
+      }
 
-        /* Noise texture overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: var(--noise-opacity);
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            z-index: 9999;
-        }
+      /* Noise texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: var(--noise-opacity);
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        z-index: 9999;
+      }
 
-        /* Ambient gradient orbs */
-        .ambient-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: -1;
-            transition: opacity 0.4s ease;
-        }
+      /* Ambient gradient orbs */
+      .ambient-orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: -1;
+        transition: opacity 0.4s ease;
+      }
 
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: var(--accent-primary);
-            opacity: 0.08;
-            top: -100px;
-            right: -100px;
-            animation: float 20s ease-in-out infinite;
-        }
+      .orb-1 {
+        width: 400px;
+        height: 400px;
+        background: var(--accent-primary);
+        opacity: 0.08;
+        top: -100px;
+        right: -100px;
+        animation: float 20s ease-in-out infinite;
+      }
 
-        .orb-2 {
-            width: 300px;
-            height: 300px;
-            background: var(--accent-secondary);
-            opacity: 0.06;
-            bottom: -50px;
-            left: -50px;
-            animation: float 25s ease-in-out infinite reverse;
-        }
+      .orb-2 {
+        width: 300px;
+        height: 300px;
+        background: var(--accent-secondary);
+        opacity: 0.06;
+        bottom: -50px;
+        left: -50px;
+        animation: float 25s ease-in-out infinite reverse;
+      }
 
-        .orb-3 {
-            width: 200px;
-            height: 200px;
-            background: var(--danger);
-            opacity: 0.04;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: pulse-slow 10s ease-in-out infinite;
-        }
+      .orb-3 {
+        width: 200px;
+        height: 200px;
+        background: var(--danger);
+        opacity: 0.04;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse-slow 10s ease-in-out infinite;
+      }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, -30px) scale(1.05); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
-            75% { transform: translate(20px, 10px) scale(1.02); }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
         }
-
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 0.04; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.08; transform: translate(-50%, -50%) scale(1.2); }
+        25% {
+          transform: translate(30px, -30px) scale(1.05);
         }
+        50% {
+          transform: translate(-20px, 20px) scale(0.95);
+        }
+        75% {
+          transform: translate(20px, 10px) scale(1.02);
+        }
+      }
 
-        /* ============================================
+      @keyframes pulse-slow {
+        0%,
+        100% {
+          opacity: 0.04;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 0.08;
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+      }
+
+      /* ============================================
            THEME TOGGLE
            ============================================ */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            padding: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-md);
-        }
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 50px;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-md);
+      }
 
-        .theme-toggle:hover {
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-            transform: scale(1.05);
-        }
+      .theme-toggle:hover {
+        border-color: var(--accent-primary);
+        box-shadow: var(--shadow-glow);
+        transform: scale(1.05);
+      }
 
-        .theme-toggle-track {
-            width: 52px;
-            height: 28px;
-            background: var(--bg-input);
-            border-radius: 50px;
-            position: relative;
-            transition: background 0.3s ease;
-        }
+      .theme-toggle-track {
+        width: 52px;
+        height: 28px;
+        background: var(--bg-input);
+        border-radius: 50px;
+        position: relative;
+        transition: background 0.3s ease;
+      }
 
-        .theme-toggle-thumb {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 22px;
-            height: 22px;
-            background: var(--accent-primary);
-            border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
+      .theme-toggle-thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        background: var(--accent-primary);
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
 
-        [data-theme="light"] .theme-toggle-thumb {
-            left: 27px;
-            background: var(--warning);
-        }
+      [data-theme="light"] .theme-toggle-thumb {
+        left: 27px;
+        background: var(--warning);
+      }
 
-        .theme-icon {
-            transition: transform 0.3s ease;
-        }
+      .theme-icon {
+        transition: transform 0.3s ease;
+      }
 
-        [data-theme="light"] .moon-icon {
-            display: none;
-        }
+      [data-theme="light"] .moon-icon {
+        display: none;
+      }
 
-        [data-theme="dark"] .sun-icon {
-            display: none;
-        }
+      [data-theme="dark"] .sun-icon {
+        display: none;
+      }
 
-        /* ============================================
+      /* ============================================
            LAYOUT
            ============================================ */
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+      .app-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
 
-        .screen {
-            display: none;
-            width: 100%;
-            max-width: 480px;
-            animation: fadeSlideIn 0.5s ease;
-        }
+      .screen {
+        display: none;
+        width: 100%;
+        max-width: 480px;
+        animation: fadeSlideIn 0.5s ease;
+      }
 
-        .screen.active {
-            display: block;
-        }
+      .screen.active {
+        display: block;
+      }
 
-        .screen.lobby-screen {
-            max-width: 600px;
-        }
+      .screen.lobby-screen {
+        max-width: 600px;
+      }
 
-        @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-        /* ============================================
+      /* ============================================
            TYPOGRAPHY
            ============================================ */
-        .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(3rem, 10vw, 4.5rem);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 50%, var(--danger) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            margin-bottom: 8px;
-            line-height: 1;
-            animation: logoGlow 3s ease-in-out infinite alternate;
-        }
+      .logo {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(3rem, 10vw, 4.5rem);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        background: linear-gradient(
+          135deg,
+          var(--text-primary) 0%,
+          var(--accent-primary) 50%,
+          var(--danger) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 8px;
+        line-height: 1;
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
 
-        @keyframes logoGlow {
-            from { filter: drop-shadow(0 0 20px var(--accent-primary-glow)); }
-            to { filter: drop-shadow(0 0 40px var(--danger-glow)); }
+      @keyframes logoGlow {
+        from {
+          filter: drop-shadow(0 0 20px var(--accent-primary-glow));
         }
-
-        .tagline {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-align: center;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            margin-bottom: 48px;
+        to {
+          filter: drop-shadow(0 0 40px var(--danger-glow));
         }
+      }
 
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 0.1em;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-        }
+      .tagline {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-align: center;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-bottom: 48px;
+      }
 
-        .subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 0.1em;
+        color: var(--text-primary);
+        margin-bottom: 24px;
+      }
 
-        /* ============================================
+      .subtitle {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+      }
+
+      /* ============================================
            CARDS
            ============================================ */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-secondary), transparent);
-            opacity: 0.6;
-        }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent-primary),
+          var(--accent-secondary),
+          transparent
+        );
+        opacity: 0.6;
+      }
 
-        .card-glow {
-            box-shadow: var(--shadow-lg), var(--shadow-glow);
-        }
+      .card-glow {
+        box-shadow: var(--shadow-lg), var(--shadow-glow);
+      }
 
-        /* ============================================
+      /* ============================================
            FORMS
            ============================================ */
-        .form-group {
-            margin-bottom: 20px;
-        }
+      .form-group {
+        margin-bottom: 20px;
+      }
 
-        .form-label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
-        }
+      .form-label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+      }
 
-        .form-input {
-            width: 100%;
-            padding: 14px 18px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
+      .form-input {
+        width: 100%;
+        padding: 14px 18px;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-primary-glow);
-        }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px var(--accent-primary-glow);
+      }
 
-        .form-input::placeholder {
-            color: var(--text-muted);
-        }
+      .form-input::placeholder {
+        color: var(--text-muted);
+      }
 
-        textarea.form-input {
-            resize: vertical;
-            min-height: 100px;
-        }
+      textarea.form-input {
+        resize: vertical;
+        min-height: 100px;
+      }
 
-        /* ============================================
+      /* ============================================
            BUTTONS
            ============================================ */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 16px 32px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 32px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
 
-        .btn:hover::before {
-            left: 100%;
-        }
+      .btn:hover::before {
+        left: 100%;
+      }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary) 0%, #9333ea 100%);
-            color: white;
-            box-shadow: 0 4px 20px var(--accent-primary-glow);
-        }
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary) 0%,
+          #9333ea 100%
+        );
+        color: white;
+        box-shadow: 0 4px 20px var(--accent-primary-glow);
+      }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-primary-glow);
-        }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px var(--accent-primary-glow);
+      }
 
-        .btn-outline {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
+      .btn-outline {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+      }
 
-        .btn-outline:hover {
-            border-color: var(--text-secondary);
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
-        }
+      .btn-outline:hover {
+        border-color: var(--text-secondary);
+        color: var(--text-primary);
+        background: var(--bg-card-hover);
+      }
 
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 20px var(--success-glow);
-        }
+      .btn-success {
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 4px 20px var(--success-glow);
+      }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--success-glow);
-        }
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px var(--success-glow);
+      }
 
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-        }
+      .btn-warning {
+        background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        color: white;
+      }
 
-        .btn-warning:hover {
-            transform: translateY(-2px);
-        }
+      .btn-warning:hover {
+        transform: translateY(-2px);
+      }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            color: white;
-            box-shadow: 0 4px 20px var(--danger-glow);
-        }
+      .btn-danger {
+        background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        color: white;
+        box-shadow: 0 4px 20px var(--danger-glow);
+      }
 
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--danger-glow);
-        }
+      .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px var(--danger-glow);
+      }
 
-        .btn-block {
-            width: 100%;
-        }
+      .btn-block {
+        width: 100%;
+      }
 
-        .btn + .btn {
-            margin-top: 12px;
-        }
+      .btn + .btn {
+        margin-top: 12px;
+      }
 
-        /* ============================================
+      /* ============================================
            ROOM CODE DISPLAY
            ============================================ */
-        .room-code-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 32px;
+      .room-code-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .room-code-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+
+      .room-code {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.4em;
+        background: linear-gradient(
+          135deg,
+          var(--accent-secondary) 0%,
+          var(--accent-primary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: codeGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes codeGlow {
+        from {
+          filter: drop-shadow(0 0 10px var(--accent-secondary-glow));
+        }
+        to {
+          filter: drop-shadow(0 0 20px var(--accent-primary-glow));
+        }
+      }
+
+      /* ============================================
+           PLAYER CARDS
+           ============================================ */
+      .players-grid {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .player-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .player-card:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--accent-primary);
+        transform: translateX(4px);
+      }
+
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .player-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: white;
+        text-transform: uppercase;
+      }
+
+      .player-name {
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .player-tag {
+        font-size: 0.75rem;
+        color: var(--accent-secondary);
+        padding: 2px 8px;
+        background: var(--accent-secondary-glow);
+        border-radius: 20px;
+        margin-left: 8px;
+      }
+
+      .remove-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--danger);
+        background: transparent;
+        color: var(--danger);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .remove-btn:hover {
+        background: var(--danger);
+        color: white;
+        transform: scale(1.1);
+      }
+
+      /* ============================================
+           ALERTS
+           ============================================ */
+      .alert {
+        padding: 20px 24px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+      }
+
+      .alert-info {
+        background: rgba(6, 182, 212, 0.1);
+        border-color: rgba(6, 182, 212, 0.3);
+        color: var(--accent-secondary);
+      }
+
+      .alert-warning {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.3);
+        color: var(--warning);
+      }
+
+      /* ============================================
+           ROLE DISPLAY
+           ============================================ */
+      .role-card {
+        text-align: center;
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .role-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        background-size: 100px 100px;
+      }
+
+      .role-impostor {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.15) 0%,
+          rgba(220, 38, 38, 0.2) 100%
+        );
+        border: 2px solid var(--danger);
+        animation: dangerPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes dangerPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px var(--danger-glow);
+        }
+        50% {
+          box-shadow: 0 0 40px var(--danger-glow),
+            0 0 60px rgba(239, 68, 68, 0.2);
+        }
+      }
+
+      .role-innocent {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.15) 0%,
+          rgba(5, 150, 105, 0.2) 100%
+        );
+        border: 2px solid var(--success);
+        box-shadow: 0 0 30px var(--success-glow);
+      }
+
+      .role-icon {
+        font-size: 4rem;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .role-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.15em;
+        margin-bottom: 12px;
+      }
+
+      .role-impostor .role-title {
+        color: var(--danger);
+      }
+
+      .role-innocent .role-title {
+        color: var(--success);
+      }
+
+      .role-description {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+      }
+
+      .secret-word {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 0.1em;
+        color: var(--success);
+        padding: 12px 24px;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 12px;
+        display: inline-block;
+      }
+
+      /* ============================================
+           CREATOR BADGE
+           ============================================ */
+      .creator-controls {
+        padding: 20px;
+        background: rgba(124, 58, 237, 0.08);
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        border-radius: 12px;
+        margin-bottom: 20px;
+      }
+
+      .creator-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: var(--accent-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+      }
+
+      /* ============================================
+           UTILITIES
+           ============================================ */
+      .text-center {
+        text-align: center;
+      }
+      .text-muted {
+        color: var(--text-muted);
+      }
+      .mb-0 {
+        margin-bottom: 0;
+      }
+      .mb-2 {
+        margin-bottom: 8px;
+      }
+      .mb-3 {
+        margin-bottom: 16px;
+      }
+      .mb-4 {
+        margin-bottom: 24px;
+      }
+      .mt-3 {
+        margin-top: 16px;
+      }
+      .d-none {
+        display: none !important;
+      }
+
+      /* ============================================
+           RESPONSIVE
+           ============================================ */
+      @media (max-width: 480px) {
+        .card {
+          padding: 28px 20px;
+          border-radius: 16px;
         }
 
-        .room-code-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
+        .logo {
+          font-size: 2.5rem;
+        }
+
+        .btn {
+          padding: 14px 24px;
         }
 
         .room-code {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
-            letter-spacing: 0.4em;
-            background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: codeGlow 2s ease-in-out infinite alternate;
+          font-size: 2rem;
         }
-
-        @keyframes codeGlow {
-            from { filter: drop-shadow(0 0 10px var(--accent-secondary-glow)); }
-            to { filter: drop-shadow(0 0 20px var(--accent-primary-glow)); }
-        }
-
-        /* ============================================
-           PLAYER CARDS
-           ============================================ */
-        .players-grid {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .player-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .player-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-primary);
-            transform: translateX(4px);
-        }
-
-        .player-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: white;
-            text-transform: uppercase;
-        }
-
-        .player-name {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .player-tag {
-            font-size: 0.75rem;
-            color: var(--accent-secondary);
-            padding: 2px 8px;
-            background: var(--accent-secondary-glow);
-            border-radius: 20px;
-            margin-left: 8px;
-        }
-
-        .remove-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            border: 1px solid var(--danger);
-            background: transparent;
-            color: var(--danger);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .remove-btn:hover {
-            background: var(--danger);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* ============================================
-           ALERTS
-           ============================================ */
-        .alert {
-            padding: 20px 24px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-        }
-
-        .alert-info {
-            background: rgba(6, 182, 212, 0.1);
-            border-color: rgba(6, 182, 212, 0.3);
-            color: var(--accent-secondary);
-        }
-
-        .alert-warning {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-            color: var(--warning);
-        }
-
-        /* ============================================
-           ROLE DISPLAY
-           ============================================ */
-        .role-card {
-            text-align: center;
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .role-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.1;
-            background-size: 100px 100px;
-        }
-
-        .role-impostor {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.2) 100%);
-            border: 2px solid var(--danger);
-            animation: dangerPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes dangerPulse {
-            0%, 100% { box-shadow: 0 0 20px var(--danger-glow); }
-            50% { box-shadow: 0 0 40px var(--danger-glow), 0 0 60px rgba(239, 68, 68, 0.2); }
-        }
-
-        .role-innocent {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.2) 100%);
-            border: 2px solid var(--success);
-            box-shadow: 0 0 30px var(--success-glow);
-        }
-
-        .role-icon {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .role-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
-            letter-spacing: 0.15em;
-            margin-bottom: 12px;
-        }
-
-        .role-impostor .role-title {
-            color: var(--danger);
-        }
-
-        .role-innocent .role-title {
-            color: var(--success);
-        }
-
-        .role-description {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 16px;
-        }
-
-        .secret-word {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 0.1em;
-            color: var(--success);
-            padding: 12px 24px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 12px;
-            display: inline-block;
-        }
-
-        /* ============================================
-           CREATOR BADGE
-           ============================================ */
-        .creator-controls {
-            padding: 20px;
-            background: rgba(124, 58, 237, 0.08);
-            border: 1px solid rgba(124, 58, 237, 0.2);
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .creator-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-        }
-
-        /* ============================================
-           UTILITIES
-           ============================================ */
-        .text-center { text-align: center; }
-        .text-muted { color: var(--text-muted); }
-        .mb-0 { margin-bottom: 0; }
-        .mb-2 { margin-bottom: 8px; }
-        .mb-3 { margin-bottom: 16px; }
-        .mb-4 { margin-bottom: 24px; }
-        .mt-3 { margin-top: 16px; }
-        .d-none { display: none !important; }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 480px) {
-            .card {
-                padding: 28px 20px;
-                border-radius: 16px;
-            }
-
-            .logo {
-                font-size: 2.5rem;
-            }
-
-            .btn {
-                padding: 14px 24px;
-            }
-
-            .room-code {
-                font-size: 2rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Ambient background orbs -->
     <div class="ambient-orb orb-1"></div>
     <div class="ambient-orb orb-2"></div>
@@ -772,326 +860,442 @@
 
     <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-        <div class="theme-toggle-track">
-            <div class="theme-toggle-thumb">
-                <span class="theme-icon moon-icon">🌙</span>
-                <span class="theme-icon sun-icon">☀️</span>
-            </div>
+      <div class="theme-toggle-track">
+        <div class="theme-toggle-thumb">
+          <span class="theme-icon moon-icon">🌙</span>
+          <span class="theme-icon sun-icon">☀️</span>
         </div>
+      </div>
     </button>
 
     <div class="app-container">
-        <!-- HOME SCREEN -->
-        <div id="homeScreen" class="screen active">
-            <div class="card card-glow">
-                <h1 class="logo">El Impostor</h1>
-                <p class="tagline">Deducción Social</p>
+      <!-- HOME SCREEN -->
+      <div id="homeScreen" class="screen active">
+        <div class="card card-glow">
+          <h1 class="logo">El Impostor</h1>
+          <p class="tagline">Deducción Social</p>
 
-                <button id="createGameBtn" class="btn btn-primary btn-block">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="8" x2="12" y2="16"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                    </svg>
-                    Crear Sala
-                </button>
-                <button id="joinGameBtn" class="btn btn-outline btn-block">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                        <polyline points="10 17 15 12 10 7"/>
-                        <line x1="15" y1="12" x2="3" y2="12"/>
-                    </svg>
-                    Unirse a Sala
-                </button>
-            </div>
+          <button id="createGameBtn" class="btn btn-primary btn-block">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            Crear Sala
+          </button>
+          <button id="joinGameBtn" class="btn btn-outline btn-block">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
+            </svg>
+            Unirse a Sala
+          </button>
         </div>
+      </div>
 
-        <!-- CREATE SCREEN -->
-        <div id="createScreen" class="screen">
-            <div class="card">
-                <h2 class="section-title">Crear Sala</h2>
+      <!-- CREATE SCREEN -->
+      <div id="createScreen" class="screen">
+        <div class="card">
+          <h2 class="section-title">Crear Sala</h2>
 
-                <div class="form-group">
-                    <label class="form-label" for="playerName">Tu nombre</label>
-                    <input type="text" class="form-input" id="playerName" placeholder="Ej: William">
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="playerName">Tu nombre</label>
+            <input
+              type="text"
+              class="form-input"
+              id="playerName"
+              placeholder="Ej: William"
+            />
+          </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="wordsList">Lista de palabras</label>
-                    <textarea class="form-input" id="wordsList" rows="3" placeholder="Astronauta, Cohete, Planeta, Luna..."></textarea>
-                    <p class="text-muted" style="font-size: 0.75rem; margin-top: 6px;">Separadas por comas</p>
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="wordsList">Lista de palabras</label>
+            <textarea
+              class="form-input"
+              id="wordsList"
+              rows="3"
+              placeholder="Astronauta, Cohete, Planeta, Luna..."
+            ></textarea>
+            <p class="text-muted" style="font-size: 0.75rem; margin-top: 6px">
+              Separadas por comas
+            </p>
+          </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="impostorCount">Cantidad de impostores</label>
-                    <input type="number" class="form-input" id="impostorCount" min="1" value="1">
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="impostorCount"
+              >Cantidad de impostores</label
+            >
+            <input
+              type="number"
+              class="form-input"
+              id="impostorCount"
+              min="1"
+              value="1"
+            />
+          </div>
 
-                <button id="createRoomBtn" class="btn btn-primary btn-block">Crear Sala</button>
-                <button id="backFromCreateBtn" class="btn btn-outline btn-block">Volver</button>
-            </div>
+          <button id="createRoomBtn" class="btn btn-primary btn-block">
+            Crear Sala
+          </button>
+          <button id="backFromCreateBtn" class="btn btn-outline btn-block">
+            Volver
+          </button>
         </div>
+      </div>
 
-        <!-- JOIN SCREEN -->
-        <div id="joinScreen" class="screen">
-            <div class="card">
-                <h2 class="section-title">Unirse a Sala</h2>
+      <!-- JOIN SCREEN -->
+      <div id="joinScreen" class="screen">
+        <div class="card">
+          <h2 class="section-title">Unirse a Sala</h2>
 
-                <div class="form-group">
-                    <label class="form-label" for="joinPlayerName">Tu nombre</label>
-                    <input type="text" class="form-input" id="joinPlayerName" placeholder="Ej: María">
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="joinPlayerName">Tu nombre</label>
+            <input
+              type="text"
+              class="form-input"
+              id="joinPlayerName"
+              placeholder="Ej: María"
+            />
+          </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="roomCode">Código de sala</label>
-                    <input type="text" class="form-input" id="roomCode" placeholder="ABC123" style="text-transform: uppercase; letter-spacing: 0.2em; text-align: center; font-size: 1.2rem;">
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="roomCode">Código de sala</label>
+            <input
+              type="text"
+              class="form-input"
+              id="roomCode"
+              placeholder="ABC123"
+              style="
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                text-align: center;
+                font-size: 1.2rem;
+              "
+            />
+          </div>
 
-                <button id="joinRoomBtn" class="btn btn-primary btn-block">Unirse</button>
-                <button id="backFromJoinBtn" class="btn btn-outline btn-block">Volver</button>
-            </div>
+          <button id="joinRoomBtn" class="btn btn-primary btn-block">
+            Unirse
+          </button>
+          <button id="backFromJoinBtn" class="btn btn-outline btn-block">
+            Volver
+          </button>
         </div>
+      </div>
 
-        <!-- LOBBY SCREEN -->
-        <div id="lobbyScreen" class="screen lobby-screen">
-            <div class="card">
-                <div class="room-code-container">
-                    <span class="room-code-label">Código</span>
-                    <span class="room-code" id="gameCode"></span>
-                </div>
+      <!-- LOBBY SCREEN -->
+      <div id="lobbyScreen" class="screen lobby-screen">
+        <div class="card">
+          <div class="room-code-container">
+            <span class="room-code-label">Código</span>
+            <span class="room-code" id="gameCode"></span>
+          </div>
 
-                <h3 class="subtitle">Jugadores conectados</h3>
-                <div id="playersList" class="players-grid">
-                    <p class="text-muted text-center">Esperando jugadores...</p>
-                </div>
+          <h3 class="subtitle">Jugadores conectados</h3>
+          <div id="playersList" class="players-grid">
+            <p class="text-muted text-center">Esperando jugadores...</p>
+          </div>
 
-                <div id="creatorControls" class="creator-controls d-none">
-                    <div class="creator-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
-                        Eres el creador
-                    </div>
-                    <button id="startGameBtn" class="btn btn-success btn-block mb-0">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
-                        </svg>
-                        Iniciar Juego
-                    </button>
-                </div>
-
-                <button id="leaveLobbyBtn" class="btn btn-outline btn-block">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    Salir de la Sala
-                </button>
+          <div id="creatorControls" class="creator-controls d-none">
+            <div class="creator-badge">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              Eres el creador
             </div>
+            <button id="startGameBtn" class="btn btn-success btn-block mb-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Iniciar Juego
+            </button>
+          </div>
+
+          <button id="leaveLobbyBtn" class="btn btn-outline btn-block">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Salir de la Sala
+          </button>
         </div>
+      </div>
 
-        <!-- GAME SCREEN -->
-        <div id="gameScreen" class="screen">
-            <div class="card">
-                <div id="roleInfo"></div>
+      <!-- GAME SCREEN -->
+      <div id="gameScreen" class="screen">
+        <div class="card">
+          <div id="roleInfo"></div>
 
-                <div id="endRoundControls" class="d-none mb-3">
-                    <button id="endRoundBtn" class="btn btn-warning btn-block">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        </svg>
-                        Terminar Ronda
-                    </button>
-                </div>
+          <div id="endRoundControls" class="d-none mb-3">
+            <button id="endRoundBtn" class="btn btn-warning btn-block">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+              </svg>
+              Terminar Ronda
+            </button>
+          </div>
 
-                <button id="backToLobbyBtn" class="btn btn-outline btn-block">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="19" y1="12" x2="5" y2="12"/>
-                        <polyline points="12 19 5 12 12 5"/>
-                    </svg>
-                    Volver a la Sala
-                </button>
-            </div>
+          <button id="backToLobbyBtn" class="btn btn-outline btn-block">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Volver a la Sala
+          </button>
         </div>
+      </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // ============================================
-        // THEME MANAGEMENT
-        // ============================================
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
+      // ============================================
+      // THEME MANAGEMENT
+      // ============================================
+      const themeToggle = document.getElementById("themeToggle");
+      const html = document.documentElement;
 
-        // Load saved theme or default to dark
-        const savedTheme = localStorage.getItem('impostor-theme') || 'dark';
-        html.setAttribute('data-theme', savedTheme);
+      // Load saved theme or default to dark
+      const savedTheme = localStorage.getItem("impostor-theme") || "dark";
+      html.setAttribute("data-theme", savedTheme);
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('impostor-theme', newTheme);
-        });
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("impostor-theme", newTheme);
+      });
 
-        // ============================================
-        // FIREBASE CONFIGURATION
-        // ============================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyCg5yaU5NepkWcLHjQkECrOUcUm85_Kus8",
-            authDomain: "juego-el-impostor.firebaseapp.com",
-            databaseURL: "https://juego-el-impostor-default-rtdb.firebaseio.com",
-            projectId: "juego-el-impostor",
-        };
+      // ============================================
+      // FIREBASE CONFIGURATION
+      // ============================================
+      const firebaseConfig = {
+        apiKey: "AIzaSyC68ef9KCmNr2CTGKdtuH3Fj1kWwiQmtbE",
+        authDomain: "jel-impostor-py.firebaseapp.com",
+        databaseURL: "https://el-impostor-py-default-rtdb.firebaseio.com",
+        projectId: "el-impostor-py",
+        storageBucket: "el-impostor-py.firebasestorage.app",
+        messagingSenderId: "940444147014",
+        appId: "1:940444147014:web:aa39844740370c1b4d5947",
+      };
 
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = app.database();
-        const roomsRef = database.ref('rooms');
+      const app = firebase.initializeApp(firebaseConfig);
+      const database = app.database();
+      const roomsRef = database.ref("rooms");
 
-        // ============================================
-        // VARIABLES AND UTILITIES
-        // ============================================
-        let currentPlayer = null;
-        let currentRoomCode = null;
-        let isCreator = false;
+      // ============================================
+      // VARIABLES AND UTILITIES
+      // ============================================
+      let currentPlayer = null;
+      let currentRoomCode = null;
+      let isCreator = false;
 
-        const screens = {
-            home: document.getElementById('homeScreen'),
-            create: document.getElementById('createScreen'),
-            join: document.getElementById('joinScreen'),
-            lobby: document.getElementById('lobbyScreen'),
-            game: document.getElementById('gameScreen')
-        };
+      const screens = {
+        home: document.getElementById("homeScreen"),
+        create: document.getElementById("createScreen"),
+        join: document.getElementById("joinScreen"),
+        lobby: document.getElementById("lobbyScreen"),
+        game: document.getElementById("gameScreen"),
+      };
 
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.remove('active'));
-            screens[screenName].classList.add('active');
+      function showScreen(screenName) {
+        Object.values(screens).forEach((screen) =>
+          screen.classList.remove("active")
+        );
+        screens[screenName].classList.add("active");
+      }
+
+      function generateRoomCode() {
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let result = "";
+        for (let i = 0; i < 6; i++) {
+          result += characters.charAt(
+            Math.floor(Math.random() * characters.length)
+          );
+        }
+        return result;
+      }
+
+      function getInitials(name) {
+        return name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .substring(0, 2);
+      }
+
+      // ============================================
+      // MULTIPLAYER LOGIC (FIREBASE)
+      // ============================================
+      function assignRoles(players, words, impostorCount) {
+        const playerIds = Object.keys(players);
+        if (playerIds.length < impostorCount) {
+          return { players, currentWord: null };
         }
 
-        function generateRoomCode() {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 6; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
+        const shuffledPlayers = [...playerIds].sort(() => Math.random() - 0.5);
+        const selectedWord = words[Math.floor(Math.random() * words.length)];
+
+        for (let i = 0; i < shuffledPlayers.length; i++) {
+          const playerId = shuffledPlayers[i];
+          if (i < impostorCount) {
+            players[playerId].role = "impostor";
+            players[playerId].word = null;
+          } else {
+            players[playerId].role = "inocente";
+            players[playerId].word = selectedWord;
+          }
         }
+        return { players, currentWord: selectedWord };
+      }
 
-        function getInitials(name) {
-            return name.split(' ').map(n => n[0]).join('').substring(0, 2);
-        }
+      function updateLobbyUI(roomData) {
+        document.getElementById("gameCode").textContent = currentRoomCode;
+        const playersListElement = document.getElementById("playersList");
+        playersListElement.innerHTML = "";
 
-        // ============================================
-        // MULTIPLAYER LOGIC (FIREBASE)
-        // ============================================
-        function assignRoles(players, words, impostorCount) {
-            const playerIds = Object.keys(players);
-            if (playerIds.length < impostorCount) {
-                return { players, currentWord: null };
-            }
+        if (roomData && roomData.players) {
+          if (!roomData.players[currentPlayer.id]) {
+            alert("Has sido eliminado de la sala por el creador.");
+            const tempRoomCode = currentRoomCode;
+            currentRoomCode = null;
+            currentPlayer = null;
+            isCreator = false;
+            roomsRef.child(tempRoomCode).off();
+            showScreen("home");
+            return;
+          }
 
-            const shuffledPlayers = [...playerIds].sort(() => Math.random() - 0.5);
-            const selectedWord = words[Math.floor(Math.random() * words.length)];
+          Object.values(roomData.players).forEach((player) => {
+            const playerCard = document.createElement("div");
+            playerCard.className = "player-card";
 
-            for (let i = 0; i < shuffledPlayers.length; i++) {
-                const playerId = shuffledPlayers[i];
-                if (i < impostorCount) {
-                    players[playerId].role = 'impostor';
-                    players[playerId].word = null;
-                } else {
-                    players[playerId].role = 'inocente';
-                    players[playerId].word = selectedWord;
-                }
-            }
-            return { players, currentWord: selectedWord };
-        }
+            const isYou = player.id === currentPlayer.id;
 
-        function updateLobbyUI(roomData) {
-            document.getElementById('gameCode').textContent = currentRoomCode;
-            const playersListElement = document.getElementById('playersList');
-            playersListElement.innerHTML = '';
-
-            if (roomData && roomData.players) {
-                if (!roomData.players[currentPlayer.id]) {
-                    alert("Has sido eliminado de la sala por el creador.");
-                    const tempRoomCode = currentRoomCode;
-                    currentRoomCode = null;
-                    currentPlayer = null;
-                    isCreator = false;
-                    roomsRef.child(tempRoomCode).off();
-                    showScreen('home');
-                    return;
-                }
-
-                Object.values(roomData.players).forEach(player => {
-                    const playerCard = document.createElement('div');
-                    playerCard.className = 'player-card';
-
-                    const isYou = player.id === currentPlayer.id;
-
-                    playerCard.innerHTML = `
+            playerCard.innerHTML = `
                         <div class="player-info">
-                            <div class="player-avatar">${getInitials(player.name)}</div>
+                            <div class="player-avatar">${getInitials(
+                              player.name
+                            )}</div>
                             <span class="player-name">
                                 ${player.name}
-                                ${isYou ? '<span class="player-tag">Tú</span>' : ''}
+                                ${
+                                  isYou
+                                    ? '<span class="player-tag">Tú</span>'
+                                    : ""
+                                }
                             </span>
                         </div>
                     `;
 
-                    if (isCreator && !isYou) {
-                        const removeBtn = document.createElement('button');
-                        removeBtn.className = 'remove-btn';
-                        removeBtn.innerHTML = '✕';
-                        removeBtn.onclick = () => removePlayer(player.id);
-                        playerCard.appendChild(removeBtn);
-                    }
-
-                    playersListElement.appendChild(playerCard);
-                });
-
-                document.getElementById('creatorControls').classList.toggle('d-none', !isCreator);
-
-                if (isCreator && roomData.words) {
-                    const wordsInfo = document.createElement('div');
-                    wordsInfo.className = roomData.words.length > 0 ? 'alert alert-info' : 'alert alert-warning';
-                    wordsInfo.innerHTML = roomData.words.length > 0
-                        ? `<strong>${roomData.words.length}</strong> palabras restantes`
-                        : 'No quedan palabras. No se pueden iniciar más rondas.';
-                    playersListElement.appendChild(wordsInfo);
-                }
-
-                if (roomData.status === 'playing') {
-                    currentPlayer.role = roomData.players[currentPlayer.id].role;
-                    currentPlayer.word = roomData.players[currentPlayer.id].word;
-                    document.getElementById('endRoundControls').classList.toggle('d-none', !isCreator);
-                    showRoleInfo();
-                    showScreen('game');
-                } else {
-                    showScreen('lobby');
-                }
-            } else {
-                alert("La sala ha sido cerrada o has sido desconectado.");
-                const tempRoomCode = currentRoomCode;
-                currentRoomCode = null;
-                currentPlayer = null;
-                isCreator = false;
-                roomsRef.child(tempRoomCode).off();
-                showScreen('home');
+            if (isCreator && !isYou) {
+              const removeBtn = document.createElement("button");
+              removeBtn.className = "remove-btn";
+              removeBtn.innerHTML = "✕";
+              removeBtn.onclick = () => removePlayer(player.id);
+              playerCard.appendChild(removeBtn);
             }
+
+            playersListElement.appendChild(playerCard);
+          });
+
+          document
+            .getElementById("creatorControls")
+            .classList.toggle("d-none", !isCreator);
+
+          if (isCreator && roomData.words) {
+            const wordsInfo = document.createElement("div");
+            wordsInfo.className =
+              roomData.words.length > 0
+                ? "alert alert-info"
+                : "alert alert-warning";
+            wordsInfo.innerHTML =
+              roomData.words.length > 0
+                ? `<strong>${roomData.words.length}</strong> palabras restantes`
+                : "No quedan palabras. No se pueden iniciar más rondas.";
+            playersListElement.appendChild(wordsInfo);
+          }
+
+          if (roomData.status === "playing") {
+            currentPlayer.role = roomData.players[currentPlayer.id].role;
+            currentPlayer.word = roomData.players[currentPlayer.id].word;
+            document
+              .getElementById("endRoundControls")
+              .classList.toggle("d-none", !isCreator);
+            showRoleInfo();
+            showScreen("game");
+          } else {
+            showScreen("lobby");
+          }
+        } else {
+          alert("La sala ha sido cerrada o has sido desconectado.");
+          const tempRoomCode = currentRoomCode;
+          currentRoomCode = null;
+          currentPlayer = null;
+          isCreator = false;
+          roomsRef.child(tempRoomCode).off();
+          showScreen("home");
         }
+      }
 
-        function showRoleInfo() {
-            const roleInfo = document.getElementById('roleInfo');
-            let html = '';
+      function showRoleInfo() {
+        const roleInfo = document.getElementById("roleInfo");
+        let html = "";
 
-            if (!currentPlayer || !currentPlayer.role) {
-                html = `<div class="alert alert-warning">Esperando asignación de rol...</div>`;
-            } else if (currentPlayer.role === 'impostor') {
-                html = `
+        if (!currentPlayer || !currentPlayer.role) {
+          html = `<div class="alert alert-warning">Esperando asignación de rol...</div>`;
+        } else if (currentPlayer.role === "impostor") {
+          html = `
                     <div class="role-card role-impostor">
                         <span class="role-icon">🎭</span>
                         <h2 class="role-title">¡Eres el Impostor!</h2>
@@ -1099,8 +1303,8 @@
                         <p class="role-description" style="opacity: 0.7;">Presta mucha atención a las pistas para adivinar la palabra secreta.</p>
                     </div>
                 `;
-            } else {
-                html = `
+        } else {
+          html = `
                     <div class="role-card role-innocent">
                         <span class="role-icon">✨</span>
                         <h2 class="role-title">Eres Inocente</h2>
@@ -1108,201 +1312,248 @@
                         <div class="secret-word">${currentPlayer.word}</div>
                     </div>
                 `;
-            }
-            roleInfo.innerHTML = html;
+        }
+        roleInfo.innerHTML = html;
+      }
+
+      // ============================================
+      // PLAYER MANAGEMENT
+      // ============================================
+      async function removePlayer(playerId) {
+        if (!currentRoomCode || !isCreator) return;
+        const roomRef = roomsRef.child(currentRoomCode);
+        await roomRef.child("players").child(playerId).remove();
+      }
+
+      function setupPresenceDetection() {
+        if (!currentRoomCode || !currentPlayer) return;
+
+        const roomRef = roomsRef.child(currentRoomCode);
+        const playerRef = roomRef.child("players").child(currentPlayer.id);
+
+        if (isCreator) {
+          roomRef.onDisconnect().remove();
+        } else {
+          playerRef.onDisconnect().remove();
         }
 
-        // ============================================
-        // PLAYER MANAGEMENT
-        // ============================================
-        async function removePlayer(playerId) {
-            if (!currentRoomCode || !isCreator) return;
-            const roomRef = roomsRef.child(currentRoomCode);
-            await roomRef.child('players').child(playerId).remove();
-        }
+        playerRef.update({ connected: true });
+      }
 
-        function setupPresenceDetection() {
-            if (!currentRoomCode || !currentPlayer) return;
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
 
-            const roomRef = roomsRef.child(currentRoomCode);
-            const playerRef = roomRef.child('players').child(currentPlayer.id);
+      // Create Room
+      document
+        .getElementById("createRoomBtn")
+        .addEventListener("click", async () => {
+          const playerName = document.getElementById("playerName").value.trim();
+          const wordsList = document.getElementById("wordsList").value.trim();
+          const impostorCount = parseInt(
+            document.getElementById("impostorCount").value
+          );
 
-            if (isCreator) {
-                roomRef.onDisconnect().remove();
-            } else {
-                playerRef.onDisconnect().remove();
-            }
+          if (!playerName || !wordsList || impostorCount < 1) {
+            alert("Por favor, completa todos los campos.");
+            return;
+          }
 
-            playerRef.update({ connected: true });
-        }
+          currentRoomCode = generateRoomCode();
+          const words = wordsList
+            .split(",")
+            .map((word) => word.trim())
+            .filter((w) => w.length > 0);
+          const playerId = "player_" + Date.now();
 
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
+          currentPlayer = {
+            id: playerId,
+            name: playerName,
+            role: null,
+            word: null,
+          };
+          isCreator = true;
 
-        // Create Room
-        document.getElementById('createRoomBtn').addEventListener('click', async () => {
-            const playerName = document.getElementById('playerName').value.trim();
-            const wordsList = document.getElementById('wordsList').value.trim();
-            const impostorCount = parseInt(document.getElementById('impostorCount').value);
+          const newRoomData = {
+            creatorId: playerId,
+            words: words,
+            impostorCount: impostorCount,
+            status: "waiting",
+            players: { [playerId]: { name: playerName, id: playerId } },
+          };
 
-            if (!playerName || !wordsList || impostorCount < 1) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-
-            currentRoomCode = generateRoomCode();
-            const words = wordsList.split(',').map(word => word.trim()).filter(w => w.length > 0);
-            const playerId = 'player_' + Date.now();
-
-            currentPlayer = { id: playerId, name: playerName, role: null, word: null };
-            isCreator = true;
-
-            const newRoomData = {
-                creatorId: playerId,
-                words: words,
-                impostorCount: impostorCount,
-                status: 'waiting',
-                players: { [playerId]: { name: playerName, id: playerId } }
-            };
-
-            try {
-                await roomsRef.child(currentRoomCode).set(newRoomData);
-                setupPresenceDetection();
-                roomsRef.child(currentRoomCode).on('value', snapshot => {
-                    const roomData = snapshot.val();
-                    updateLobbyUI(roomData);
-                });
-            } catch (error) {
-                console.error("Error creando sala:", error);
-                alert("Error al crear la sala: " + error.message);
-                currentRoomCode = null;
-            }
-        });
-
-        // Join Room
-        document.getElementById('joinRoomBtn').addEventListener('click', async () => {
-            const playerName = document.getElementById('joinPlayerName').value.trim();
-            const roomCode = document.getElementById('roomCode').value.trim().toUpperCase();
-
-            if (!playerName || !roomCode) {
-                alert('Por favor, ingresa tu nombre y el código de sala.');
-                return;
-            }
-
-            const roomRef = roomsRef.child(roomCode);
-
-            try {
-                const snapshot = await roomRef.once('value');
-                const roomData = snapshot.val();
-
-                if (!roomData || roomData.status !== 'waiting') {
-                    alert('Sala no encontrada o el juego ya ha comenzado.');
-                    return;
-                }
-
-                const playerId = 'player_' + Date.now();
-                currentPlayer = { id: playerId, name: playerName, role: null, word: null };
-                currentRoomCode = roomCode;
-                isCreator = false;
-
-                await roomRef.child('players').child(playerId).set({ name: playerName, id: playerId });
-                setupPresenceDetection();
-                roomRef.on('value', snapshot => {
-                    const roomData = snapshot.val();
-                    updateLobbyUI(roomData);
-                });
-            } catch (error) {
-                console.error("Error al unirse a la sala:", error);
-                alert("Error al unirse a la sala: " + error.message);
-            }
-        });
-
-        // Start Game (Creator only)
-        document.getElementById('startGameBtn').addEventListener('click', async () => {
-            if (!currentRoomCode || !isCreator) return;
-
-            const roomRef = roomsRef.child(currentRoomCode);
-            const snapshot = await roomRef.once('value');
-            let room = snapshot.val();
-
-            if (!room || Object.keys(room.players).length < 2) {
-                alert("Necesitas al menos 2 jugadores para empezar.");
-                return;
-            }
-
-            if (!room.words || room.words.length === 0) {
-                alert("No quedan más palabras disponibles.");
-                return;
-            }
-
-            const { players, currentWord } = assignRoles(room.players, room.words, room.impostorCount);
-            room.players = players;
-            room.status = 'playing';
-
-            await roomRef.update({
-                status: 'playing',
-                players: room.players,
-                currentWord: currentWord
+          try {
+            await roomsRef.child(currentRoomCode).set(newRoomData);
+            setupPresenceDetection();
+            roomsRef.child(currentRoomCode).on("value", (snapshot) => {
+              const roomData = snapshot.val();
+              updateLobbyUI(roomData);
             });
-        });
-
-        // End Round (Creator only)
-        document.getElementById('endRoundBtn').addEventListener('click', async () => {
-            if (!currentRoomCode || !isCreator) return;
-
-            const roomRef = roomsRef.child(currentRoomCode);
-            const snapshot = await roomRef.once('value');
-            let room = snapshot.val();
-
-            if (!room) return;
-
-            const currentWord = room.currentWord;
-            if (currentWord && room.words) {
-                const wordIndex = room.words.indexOf(currentWord);
-                if (wordIndex > -1) {
-                    room.words.splice(wordIndex, 1);
-                }
-            }
-
-            Object.keys(room.players).forEach(playerId => {
-                room.players[playerId].role = null;
-                room.players[playerId].word = null;
-            });
-
-            await roomRef.update({
-                status: 'waiting',
-                players: room.players,
-                words: room.words,
-                currentWord: null
-            });
-        });
-
-        // Leave Room
-        document.getElementById('leaveLobbyBtn').addEventListener('click', async () => {
-            if (!currentRoomCode || !currentPlayer) return;
-
-            const roomRef = roomsRef.child(currentRoomCode);
-            roomRef.off();
-
-            if (isCreator) {
-                await roomRef.remove();
-            } else {
-                await roomRef.child('players').child(currentPlayer.id).remove();
-            }
-
+          } catch (error) {
+            console.error("Error creando sala:", error);
+            alert("Error al crear la sala: " + error.message);
             currentRoomCode = null;
-            currentPlayer = null;
-            isCreator = false;
-            showScreen('home');
+          }
         });
 
-        // Navigation buttons
-        document.getElementById('createGameBtn').addEventListener('click', () => showScreen('create'));
-        document.getElementById('joinGameBtn').addEventListener('click', () => showScreen('join'));
-        document.getElementById('backFromCreateBtn').addEventListener('click', () => showScreen('home'));
-        document.getElementById('backFromJoinBtn').addEventListener('click', () => showScreen('home'));
-        document.getElementById('backToLobbyBtn').addEventListener('click', () => showScreen('lobby'));
+      // Join Room
+      document
+        .getElementById("joinRoomBtn")
+        .addEventListener("click", async () => {
+          const playerName = document
+            .getElementById("joinPlayerName")
+            .value.trim();
+          const roomCode = document
+            .getElementById("roomCode")
+            .value.trim()
+            .toUpperCase();
+
+          if (!playerName || !roomCode) {
+            alert("Por favor, ingresa tu nombre y el código de sala.");
+            return;
+          }
+
+          const roomRef = roomsRef.child(roomCode);
+
+          try {
+            const snapshot = await roomRef.once("value");
+            const roomData = snapshot.val();
+
+            if (!roomData || roomData.status !== "waiting") {
+              alert("Sala no encontrada o el juego ya ha comenzado.");
+              return;
+            }
+
+            const playerId = "player_" + Date.now();
+            currentPlayer = {
+              id: playerId,
+              name: playerName,
+              role: null,
+              word: null,
+            };
+            currentRoomCode = roomCode;
+            isCreator = false;
+
+            await roomRef
+              .child("players")
+              .child(playerId)
+              .set({ name: playerName, id: playerId });
+            setupPresenceDetection();
+            roomRef.on("value", (snapshot) => {
+              const roomData = snapshot.val();
+              updateLobbyUI(roomData);
+            });
+          } catch (error) {
+            console.error("Error al unirse a la sala:", error);
+            alert("Error al unirse a la sala: " + error.message);
+          }
+        });
+
+      // Start Game (Creator only)
+      document
+        .getElementById("startGameBtn")
+        .addEventListener("click", async () => {
+          if (!currentRoomCode || !isCreator) return;
+
+          const roomRef = roomsRef.child(currentRoomCode);
+          const snapshot = await roomRef.once("value");
+          let room = snapshot.val();
+
+          if (!room || Object.keys(room.players).length < 2) {
+            alert("Necesitas al menos 2 jugadores para empezar.");
+            return;
+          }
+
+          if (!room.words || room.words.length === 0) {
+            alert("No quedan más palabras disponibles.");
+            return;
+          }
+
+          const { players, currentWord } = assignRoles(
+            room.players,
+            room.words,
+            room.impostorCount
+          );
+          room.players = players;
+          room.status = "playing";
+
+          await roomRef.update({
+            status: "playing",
+            players: room.players,
+            currentWord: currentWord,
+          });
+        });
+
+      // End Round (Creator only)
+      document
+        .getElementById("endRoundBtn")
+        .addEventListener("click", async () => {
+          if (!currentRoomCode || !isCreator) return;
+
+          const roomRef = roomsRef.child(currentRoomCode);
+          const snapshot = await roomRef.once("value");
+          let room = snapshot.val();
+
+          if (!room) return;
+
+          const currentWord = room.currentWord;
+          if (currentWord && room.words) {
+            const wordIndex = room.words.indexOf(currentWord);
+            if (wordIndex > -1) {
+              room.words.splice(wordIndex, 1);
+            }
+          }
+
+          Object.keys(room.players).forEach((playerId) => {
+            room.players[playerId].role = null;
+            room.players[playerId].word = null;
+          });
+
+          await roomRef.update({
+            status: "waiting",
+            players: room.players,
+            words: room.words,
+            currentWord: null,
+          });
+        });
+
+      // Leave Room
+      document
+        .getElementById("leaveLobbyBtn")
+        .addEventListener("click", async () => {
+          if (!currentRoomCode || !currentPlayer) return;
+
+          const roomRef = roomsRef.child(currentRoomCode);
+          roomRef.off();
+
+          if (isCreator) {
+            await roomRef.remove();
+          } else {
+            await roomRef.child("players").child(currentPlayer.id).remove();
+          }
+
+          currentRoomCode = null;
+          currentPlayer = null;
+          isCreator = false;
+          showScreen("home");
+        });
+
+      // Navigation buttons
+      document
+        .getElementById("createGameBtn")
+        .addEventListener("click", () => showScreen("create"));
+      document
+        .getElementById("joinGameBtn")
+        .addEventListener("click", () => showScreen("join"));
+      document
+        .getElementById("backFromCreateBtn")
+        .addEventListener("click", () => showScreen("home"));
+      document
+        .getElementById("backFromJoinBtn")
+        .addEventListener("click", () => showScreen("home"));
+      document
+        .getElementById("backToLobbyBtn")
+        .addEventListener("click", () => showScreen("lobby"));
     </script>
-</body>
+  </body>
 </html>
